@@ -87,15 +87,12 @@ Create it with this content:
 [
     {
         "key": "shift+cmd+l",
+        "command": "-addCursorsAtSearchResults",
+        "when": "fileMatchOrMatchFocus && searchViewletVisible"
+    },
+    {
+        "key": "shift+cmd+l",
         "command": "-workbench.action.gotoLine"
-    },
-    {
-        "key": "shift+cmd+l",
-        "command": "-editor.action.selectHighlights"
-    },
-    {
-        "key": "shift+cmd+l",
-        "command": "-aichat.newchataction"
     },
     {
         "key": "shift+cmd+l",
@@ -124,15 +121,12 @@ Update it to:
     },
     {
         "key": "shift+cmd+l",
+        "command": "-addCursorsAtSearchResults",
+        "when": "fileMatchOrMatchFocus && searchViewletVisible"
+    },
+    {
+        "key": "shift+cmd+l",
         "command": "-workbench.action.gotoLine"
-    },
-    {
-        "key": "shift+cmd+l",
-        "command": "-editor.action.selectHighlights"
-    },
-    {
-        "key": "shift+cmd+l",
-        "command": "-aichat.newchataction"
     },
     {
         "key": "shift+cmd+l",
@@ -143,7 +137,7 @@ Update it to:
 
 > **Important:**
 > - Add a comma after the last existing entry before adding new ones
-> - Lines with `-` prefix disable conflicting default bindings
+> - Lines with `-` prefix disable conflicting default bindings (you need BOTH)
 > - The `autosay.openNewChat` entry binds `Cmd+Shift+L` to our greeting + new chat command
 
 ### Step 2: Restart your editor
@@ -190,44 +184,31 @@ Open Command Palette (`Cmd+Shift+P`) and type "AutoSay":
 
 ### Greeting speaks but new chat doesn't open
 
-This is a known issue where Cursor's internal chat commands sometimes don't respond to programmatic calls.
+This usually means you haven't disabled all the conflicting keybindings.
 
-**Step 1: Check the Developer Console**
-1. Open Developer Console: `Help → Toggle Developer Tools → Console`
-2. Press `Cmd+Shift+L` and look for messages starting with "AutoSay:"
-3. You should see something like:
-   ```
-   AutoSay: Opening NEW chat with greeting
-   AutoSay: Speaking greeting (triggered by newChat)
-   AutoSay: Successfully executed aichat.newchataction
-   ```
+**The fix:** Make sure your `keybindings.json` has ALL these entries to disable conflicts:
 
-**Step 2: Verify keybindings are correct**
-
-Make sure you've disabled the original Cursor keybinding. Your `keybindings.json` should include:
 ```json
 {
     "key": "shift+cmd+l",
-    "command": "-aichat.newchataction"
+    "command": "-addCursorsAtSearchResults",
+    "when": "fileMatchOrMatchFocus && searchViewletVisible"
+},
+{
+    "key": "shift+cmd+l",
+    "command": "-workbench.action.gotoLine"
+},
+{
+    "key": "shift+cmd+l",
+    "command": "autosay.openNewChat"
 }
 ```
 
-**Step 3: Try alternative chat commands**
+The `-` prefix disables the original binding. You need to disable BOTH:
+- `addCursorsAtSearchResults` 
+- `workbench.action.gotoLine`
 
-Run `AutoSay: Show Detected Chat Commands` and check which commands are available. The extension tries these in order:
-- `aichat.newchataction` (Cursor primary)
-- `composer.createNew` (Cursor composer)
-- `composer.newAgentChat` (Cursor agent)
-- `workbench.action.chat.open` (VS Code Copilot)
-
-**Step 4: Manual workaround**
-
-If programmatic opening doesn't work, you can use the extension just for the greeting and open new chat manually:
-1. Press `Cmd+Shift+L` to hear the greeting
-2. Press `Cmd+L` then click "New Chat" to open a fresh chat
-
-**Why this happens:**
-Cursor's internal commands may require specific UI state or context that isn't available when called programmatically. This varies between Cursor versions.
+Then add the `autosay.openNewChat` binding.
 
 ### Keybinding doesn't work / Opens "Go to Line"
 

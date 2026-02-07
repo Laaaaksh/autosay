@@ -96,48 +96,49 @@ Create it with this content:
     },
     {
         "key": "shift+cmd+l",
+        "command": "-editor.action.selectHighlights"
+    },
+    {
+        "key": "shift+cmd+l",
+        "command": "-aichat.newchataction"
+    },
+    {
+        "key": "shift+cmd+l",
         "command": "autosay.openNewChat"
     }
 ]
 ```
 
 #### If the file already has keybindings:
-Add these entries **inside the existing array**. For example, if your file looks like:
-```json
-[
-    {
-        "key": "cmd+k",
-        "command": "someOtherCommand"
-    }
-]
-```
+Add these entries **inside the existing array** (add a comma after the last existing entry):
 
-Update it to:
 ```json
-[
-    {
-        "key": "cmd+k",
-        "command": "someOtherCommand"
-    },
-    {
-        "key": "shift+cmd+l",
-        "command": "-addCursorsAtSearchResults",
-        "when": "fileMatchOrMatchFocus && searchViewletVisible"
-    },
-    {
-        "key": "shift+cmd+l",
-        "command": "-workbench.action.gotoLine"
-    },
-    {
-        "key": "shift+cmd+l",
-        "command": "autosay.openNewChat"
-    }
-]
+{
+    "key": "shift+cmd+l",
+    "command": "-addCursorsAtSearchResults",
+    "when": "fileMatchOrMatchFocus && searchViewletVisible"
+},
+{
+    "key": "shift+cmd+l",
+    "command": "-workbench.action.gotoLine"
+},
+{
+    "key": "shift+cmd+l",
+    "command": "-editor.action.selectHighlights"
+},
+{
+    "key": "shift+cmd+l",
+    "command": "-aichat.newchataction"
+},
+{
+    "key": "shift+cmd+l",
+    "command": "autosay.openNewChat"
+}
 ```
 
 > **Important:**
-> - Add a comma after the last existing entry before adding new ones
-> - Lines with `-` prefix disable conflicting default bindings (you need BOTH)
+> - Lines with `-` prefix disable conflicting default bindings
+> - You must disable ALL FOUR commands for it to work properly
 > - The `autosay.openNewChat` entry binds `Cmd+Shift+L` to our greeting + new chat command
 
 ### Step 2: Restart your editor
@@ -186,7 +187,7 @@ Open Command Palette (`Cmd+Shift+P`) and type "AutoSay":
 
 This usually means you haven't disabled all the conflicting keybindings.
 
-**The fix:** Make sure your `keybindings.json` has ALL these entries to disable conflicts:
+**The fix:** Make sure your `keybindings.json` has ALL these entries:
 
 ```json
 {
@@ -200,13 +201,23 @@ This usually means you haven't disabled all the conflicting keybindings.
 },
 {
     "key": "shift+cmd+l",
+    "command": "-editor.action.selectHighlights"
+},
+{
+    "key": "shift+cmd+l",
+    "command": "-aichat.newchataction"
+},
+{
+    "key": "shift+cmd+l",
     "command": "autosay.openNewChat"
 }
 ```
 
-The `-` prefix disables the original binding. You need to disable BOTH:
+The `-` prefix disables the original binding. You must disable ALL FOUR:
 - `addCursorsAtSearchResults` 
 - `workbench.action.gotoLine`
+- `editor.action.selectHighlights`
+- `aichat.newchataction`
 
 Then add the `autosay.openNewChat` binding.
 

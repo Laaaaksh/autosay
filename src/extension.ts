@@ -101,14 +101,25 @@ async function logAvailableCommands(): Promise<void> {
  * Attempts to open a new AI chat using various Cursor/VS Code commands
  */
 async function openNewAIChat(): Promise<void> {
-    const chatCommands = [
-        'aichat.newchataction',      // Cursor primary
-        'composer.createNew',         // Cursor composer
-        'composer.newAgentChat',      // Cursor agent
-        'workbench.action.chat.open'  // VS Code Copilot
+    // First, ensure the composer/chat panel is open
+    try {
+        await vscode.commands.executeCommand('composer.startComposerPrompt');
+        console.log('AutoSay: Opened composer panel');
+    } catch {
+        // Panel might already be open, continue
+    }
+
+    // Small delay to ensure panel is ready
+    await new Promise(resolve => setTimeout(resolve, 150));
+
+    // Now create a new chat within the panel
+    const newChatCommands = [
+        'composer.createNew',         // Create new composer chat
+        'composer.newAgentChat',      // Create new agent chat
+        'aichat.newchataction'        // Fallback
     ];
 
-    for (const command of chatCommands) {
+    for (const command of newChatCommands) {
         try {
             await vscode.commands.executeCommand(command);
             console.log(`AutoSay: Successfully executed ${command}`);
@@ -118,7 +129,7 @@ async function openNewAIChat(): Promise<void> {
         }
     }
     
-    console.log('AutoSay: No chat command succeeded');
+    console.log('AutoSay: No new chat command succeeded');
 }
 
 /**

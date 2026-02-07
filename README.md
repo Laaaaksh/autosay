@@ -20,7 +20,7 @@ A Cursor/VS Code extension that automatically speaks a personalized greeting whe
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/autosay.git
+git clone https://github.com/Laaaaksh/autosay.git
 cd autosay
 
 # Install dependencies
@@ -40,7 +40,7 @@ cursor --install-extension autosay-1.0.0.vsix --force
 
 ```bash
 # Clone and install
-git clone https://github.com/YOUR_USERNAME/autosay.git
+git clone https://github.com/Laaaaksh/autosay.git
 cd autosay
 npm install
 

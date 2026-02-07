@@ -191,6 +191,40 @@ Your keybindings file has conflicting bindings.
 3. Check if `autosay.enabled` is `true` in settings
 4. Try a different voice - some voices may not be installed
 
+### Wrong voice (male instead of female)
+
+If you hear a male voice instead of Samantha:
+
+1. **Check if Samantha is available** on your system:
+   ```bash
+   say -v '?' | grep Samantha
+   ```
+
+2. **Test Samantha directly**:
+   ```bash
+   say -v "Samantha" "Hello, this is Samantha"
+   ```
+
+3. **Explicitly set the voice** in Cursor settings (`Cmd+,`):
+   ```json
+   "autosay.voice": "Samantha"
+   ```
+
+4. **If Samantha isn't available**, try another female voice:
+   ```bash
+   # List all available voices
+   say -v '?'
+   
+   # Try Karen (Australian)
+   say -v "Karen" "Hello, this is Karen"
+   ```
+   Then set that voice in settings.
+
+5. **Download more voices** in macOS:
+   - Go to **System Settings → Accessibility → Spoken Content**
+   - Click **System Voice** dropdown → **Manage Voices**
+   - Download "Samantha" or other preferred voices
+
 ### VS Code: No AI chat available
 
 This extension is primarily designed for Cursor's AI chat feature. In vanilla VS Code:

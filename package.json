@@ -1,7 +1,7 @@
 {
   "name": "autosay",
   "displayName": "AutoSay Greeting",
-  "description": "Automatically speaks a greeting when you start a new AI chat in Cursor",
+  "description": "Automatically speaks a greeting when you start a new AI chat in Cursor or VS Code",
   "version": "1.0.0",
   "publisher": "laksh-sadhwani",
   "author": {

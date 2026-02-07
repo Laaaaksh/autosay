@@ -1,18 +1,19 @@
-# AutoSay - Cursor Greeting Extension
+# AutoSay - Greeting Extension for Cursor & VS Code
 
 A Cursor/VS Code extension that automatically speaks a personalized greeting when you open a new AI chat session.
 
 ## Features
 
 - Speaks a customizable greeting when you open a new chat (`Cmd+Shift+L`)
-- Speaks on Cursor startup
+- Speaks on editor startup
 - Configurable message, voice, and speech rate
 - Uses macOS native text-to-speech (female voice by default)
+- Works with both **Cursor** and **VS Code**
 
 ## Requirements
 
 - **macOS** (uses the native `say` command for text-to-speech)
-- **Cursor IDE** (or VS Code)
+- **Cursor IDE** or **VS Code**
 
 ## Installation
 
@@ -34,6 +35,9 @@ npx vsce package --allow-missing-repository
 
 # Install in Cursor
 cursor --install-extension autosay-1.0.0.vsix --force
+
+# OR Install in VS Code
+code --install-extension autosay-1.0.0.vsix --force
 ```
 
 ### Option 2: Development mode
@@ -44,16 +48,21 @@ git clone https://github.com/Laaaaksh/autosay.git
 cd autosay
 npm install
 
-# Open in Cursor and press F5 to run in development mode
+# Open in Cursor/VS Code and press F5 to run in development mode
 ```
 
 ## Setup
 
 ### Step 1: Configure the keybinding
 
-The extension requires a keybinding to trigger the greeting. Add this to your Cursor keybindings file:
+The extension requires a keybinding to trigger the greeting. Add this to your keybindings file:
 
-**Location:** `~/Library/Application Support/Cursor/User/keybindings.json`
+**Keybindings file location:**
+
+| Editor | Location |
+|--------|----------|
+| **Cursor** | `~/Library/Application Support/Cursor/User/keybindings.json` |
+| **VS Code** | `~/Library/Application Support/Code/User/keybindings.json` |
 
 Add these entries to your keybindings array:
 
@@ -70,13 +79,13 @@ Add these entries to your keybindings array:
 
 > **Note:** The first entry disables the default "Go to Line" binding. The second binds `Cmd+Shift+L` to our greeting + new chat command.
 
-### Step 2: Restart Cursor
+### Step 2: Restart your editor
 
-After installing and configuring, restart Cursor completely (`Cmd+Q` and reopen).
+After installing and configuring, restart Cursor/VS Code completely (`Cmd+Q` and reopen).
 
 ## Configuration
 
-Open Cursor Settings (`Cmd+,`) and search for "AutoSay":
+Open Settings (`Cmd+,`) and search for "AutoSay":
 
 | Setting | Default | Description |
 |---------|---------|-------------|
@@ -105,13 +114,14 @@ say -v '?'
 | Command | Description |
 |---------|-------------|
 | `AutoSay: Speak Greeting` | Manually trigger the greeting |
-| `AutoSay: Show Detected Chat Commands` | Debug: shows available Cursor chat commands |
+| `AutoSay: Show Detected Chat Commands` | Debug: shows available chat commands |
+| `AutoSay: Open New Chat with Greeting` | Open new AI chat and speak greeting |
 
 ## Troubleshooting
 
 ### Greeting speaks but new chat doesn't open
 
-The Cursor commands may vary between versions. Check the Developer Console (`Help → Toggle Developer Tools → Console`) for "AutoSay:" log messages.
+The chat commands may vary between Cursor and VS Code versions. Check the Developer Console (`Help → Toggle Developer Tools → Console`) for "AutoSay:" log messages.
 
 Try running the command manually:
 1. Open Command Palette (`Cmd+Shift+P`)
@@ -122,7 +132,7 @@ Try running the command manually:
 
 Your keybindings file might have a conflicting binding. 
 
-1. Open `~/Library/Application Support/Cursor/User/keybindings.json`
+1. Open your keybindings file (see locations above)
 2. Look for any existing `shift+cmd+l` bindings
 3. Either remove them or add the `-` prefix to disable them:
    ```json
@@ -134,16 +144,20 @@ Your keybindings file might have a conflicting binding.
 
 ### Keybindings file location
 
-Cursor stores settings in a **different location** than `~/.cursor/`:
+| Editor | Correct Path |
+|--------|--------------|
+| **Cursor** | `~/Library/Application Support/Cursor/User/keybindings.json` |
+| **VS Code** | `~/Library/Application Support/Code/User/keybindings.json` |
 
-- **Correct:** `~/Library/Application Support/Cursor/User/keybindings.json`
-- **Wrong:** `~/.cursor/User/keybindings.json`
+> **Note:** Do NOT use `~/.cursor/` or `~/.vscode/` - those are different directories.
 
 ### Extension not loading
 
 1. Check if the extension is installed: `Cmd+Shift+P` → "Extensions: Show Installed Extensions"
 2. Look for "AutoSay Greeting"
-3. If not found, reinstall: `cursor --install-extension autosay-1.0.0.vsix --force`
+3. If not found, reinstall:
+   - Cursor: `cursor --install-extension autosay-1.0.0.vsix --force`
+   - VS Code: `code --install-extension autosay-1.0.0.vsix --force`
 
 ### No sound
 
@@ -151,13 +165,17 @@ Cursor stores settings in a **different location** than `~/.cursor/`:
 2. Test the `say` command in terminal: `say "Hello"`
 3. Check if `autosay.enabled` is set to `true` in settings
 
+### VS Code: No AI chat available
+
+This extension is primarily designed for Cursor's AI chat feature. In vanilla VS Code, you'll need an AI chat extension (like GitHub Copilot Chat) for the new chat functionality to work. The greeting will still speak on startup.
+
 ## How It Works
 
 1. The extension registers a command `autosay.openNewChat`
 2. A keybinding maps `Cmd+Shift+L` to this command
 3. When triggered, the extension:
    - Speaks the configured greeting using macOS `say` command
-   - Executes Cursor's `aichat.newchataction` to open a new chat
+   - Executes the AI chat command to open a new chat (Cursor: `aichat.newchataction`)
 
 ## Development
 

@@ -97,7 +97,7 @@ Create it with this content:
     {
         "key": "shift+cmd+l",
         "command": "-editor.action.selectHighlights"
-    },
+    },     
     {
         "key": "shift+cmd+l",
         "command": "-aichat.newchataction"
@@ -170,6 +170,13 @@ If you find any other commands assigned to `shift+cmd+l` without a `-` prefix, r
 ### Step 2: Restart your editor
 
 After installing and configuring, **completely restart** Cursor/VS Code (`Cmd+Q` and reopen).
+
+> **Important:** You must restart Cursor/VS Code **every time** you:
+> - Install or update the extension
+> - Change any keybindings
+> - Modify extension settings
+> 
+> Changes won't take effect until you restart!
 
 ## Configuration
 

@@ -137,9 +137,35 @@ Add these entries **inside the existing array** (add a comma after the last exis
 ```
 
 > **Important:**
-> - Lines with `-` prefix disable conflicting default bindings
+> - Lines with `-` prefix DISABLE conflicting default bindings
 > - You must disable ALL FOUR commands for it to work properly
 > - The `autosay.openNewChat` entry binds `Cmd+Shift+L` to our greeting + new chat command
+
+#### Common Mistake to Avoid
+
+Make sure you DON'T have any lines that ASSIGN `shift+cmd+l` to other commands. For example, this is WRONG:
+
+```json
+{
+    "key": "shift+cmd+l",
+    "command": "workbench.action.gotoLine"  // ❌ WRONG - No minus sign = ASSIGNS the key!
+}
+```
+
+This will conflict with AutoSay. You should only have lines that DISABLE (with `-` prefix) or the final `autosay.openNewChat` assignment:
+
+```json
+{
+    "key": "shift+cmd+l",
+    "command": "-workbench.action.gotoLine"  // ✓ CORRECT - Has minus sign = DISABLES
+}
+```
+
+**Quick check:** Search your `keybindings.json` for `shift+cmd+l`. Every entry should either:
+1. Start with `-` (disable), OR
+2. Be `autosay.openNewChat` (our command)
+
+If you find any other commands assigned to `shift+cmd+l` without a `-` prefix, remove those lines.
 
 ### Step 2: Restart your editor
 
@@ -185,9 +211,11 @@ Open Command Palette (`Cmd+Shift+P`) and type "AutoSay":
 
 ### Greeting speaks but new chat doesn't open
 
-This usually means you haven't disabled all the conflicting keybindings.
+This usually means one of two things:
 
-**The fix:** Make sure your `keybindings.json` has ALL these entries:
+**Problem 1: Missing disabled keybindings**
+
+Make sure your `keybindings.json` disables ALL FOUR conflicting commands:
 
 ```json
 {
@@ -213,13 +241,23 @@ This usually means you haven't disabled all the conflicting keybindings.
 }
 ```
 
-The `-` prefix disables the original binding. You must disable ALL FOUR:
-- `addCursorsAtSearchResults` 
-- `workbench.action.gotoLine`
-- `editor.action.selectHighlights`
-- `aichat.newchataction`
+**Problem 2: Conflicting keybinding assignment (most common!)**
 
-Then add the `autosay.openNewChat` binding.
+Search your `keybindings.json` for any line that ASSIGNS `shift+cmd+l` to another command (without a `-` prefix). For example:
+
+```json
+// ❌ This is WRONG - remove this line if you have it!
+{
+    "key": "shift+cmd+l",
+    "command": "workbench.action.gotoLine"
+}
+```
+
+This line assigns the key to "Go to Line" which conflicts with AutoSay. **Delete any such lines.**
+
+Only keep lines that:
+- DISABLE with `-` prefix (e.g., `-workbench.action.gotoLine`)
+- OR are the final `autosay.openNewChat` assignment
 
 ### Keybinding doesn't work / Opens "Go to Line"
 

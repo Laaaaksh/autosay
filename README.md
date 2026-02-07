@@ -177,7 +177,9 @@ npx vsce package --allow-missing-repository
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+GPL-3.0 License - see [LICENSE](LICENSE) for details.
+
+This means you can use and modify this software, but any derivative work must also be open-source under GPL-3.0.
 
 ## Author
 

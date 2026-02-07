@@ -27,8 +27,12 @@ A Cursor/VS Code extension that automatically speaks a personalized greeting whe
 ### Option 1: Install from .vsix file
 
 ```bash
-# Clone the repository
+# Clone the repository (HTTPS)
 git clone https://github.com/Laaaaksh/autosay.git
+
+# OR clone via SSH
+git clone git@github.com:Laaaaksh/autosay.git
+
 cd autosay
 
 # Install dependencies
@@ -50,8 +54,12 @@ code --install-extension autosay-1.0.0.vsix --force
 ### Option 2: Development mode
 
 ```bash
-# Clone and install
+# Clone and install (HTTPS)
 git clone https://github.com/Laaaaksh/autosay.git
+
+# OR clone via SSH
+git clone git@github.com:Laaaaksh/autosay.git
+
 cd autosay
 npm install
 
@@ -62,7 +70,7 @@ npm install
 
 ### Step 1: Configure the keybinding
 
-The extension requires a keybinding to trigger the greeting on new chat. Add this to your keybindings file.
+The extension requires a keybinding to trigger the greeting on new chat.
 
 **Keybindings file location:**
 
@@ -71,8 +79,10 @@ The extension requires a keybinding to trigger the greeting on new chat. Add thi
 | **Cursor** | `~/Library/Application Support/Cursor/User/keybindings.json` |
 | **VS Code** | `~/Library/Application Support/Code/User/keybindings.json` |
 
-**Complete keybindings.json example:**
+**How to update your keybindings:**
 
+#### If the file doesn't exist or is empty:
+Create it with this content:
 ```json
 [
     {
@@ -94,9 +104,47 @@ The extension requires a keybinding to trigger the greeting on new chat. Add thi
 ]
 ```
 
-> **What this does:**
+#### If the file already has keybindings:
+Add these entries **inside the existing array**. For example, if your file looks like:
+```json
+[
+    {
+        "key": "cmd+k",
+        "command": "someOtherCommand"
+    }
+]
+```
+
+Update it to:
+```json
+[
+    {
+        "key": "cmd+k",
+        "command": "someOtherCommand"
+    },
+    {
+        "key": "shift+cmd+l",
+        "command": "-workbench.action.gotoLine"
+    },
+    {
+        "key": "shift+cmd+l",
+        "command": "-editor.action.selectHighlights"
+    },
+    {
+        "key": "shift+cmd+l",
+        "command": "-aichat.newchataction"
+    },
+    {
+        "key": "shift+cmd+l",
+        "command": "autosay.openNewChat"
+    }
+]
+```
+
+> **Important:**
+> - Add a comma after the last existing entry before adding new ones
 > - Lines with `-` prefix disable conflicting default bindings
-> - The last entry binds `Cmd+Shift+L` to our greeting + new chat command
+> - The `autosay.openNewChat` entry binds `Cmd+Shift+L` to our greeting + new chat command
 
 ### Step 2: Restart your editor
 

@@ -4,10 +4,27 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 
-let lastGreetingTime = 0;
+/** Debounce time to prevent multiple greetings in quick succession */
 const DEBOUNCE_MS = 5000;
 
-function getConfig() {
+/** Timestamp of the last greeting */
+let lastGreetingTime = 0;
+
+/**
+ * Configuration interface for AutoSay settings
+ */
+interface AutoSayConfig {
+    message: string;
+    voice: string;
+    rate: number;
+    enabled: boolean;
+}
+
+/**
+ * Retrieves the AutoSay configuration from VS Code settings
+ * @returns AutoSayConfig object with all settings
+ */
+function getConfig(): AutoSayConfig {
     const config = vscode.workspace.getConfiguration('autosay');
     return {
         message: config.get<string>('message') || 'Hello!',
@@ -17,17 +34,29 @@ function getConfig() {
     };
 }
 
+/**
+ * Speaks the given message using macOS text-to-speech
+ * @param message - The text to speak
+ * @param voice - The voice to use (e.g., 'Samantha')
+ * @param rate - Speech rate in words per minute
+ */
 function speak(message: string, voice: string, rate: number): void {
+    // Escape quotes to prevent command injection
     const escapedMessage = message.replace(/"/g, '\\"').replace(/'/g, "\\'");
     const command = `say -v "${voice}" -r ${rate} "${escapedMessage}"`;
     
     exec(command, (error) => {
         if (error) {
-            console.error('AutoSay TTS error:', error);
+            console.error('AutoSay: TTS error:', error.message);
+            vscode.window.showErrorMessage(`AutoSay: Failed to speak. Is the voice "${voice}" available?`);
         }
     });
 }
 
+/**
+ * Triggers the greeting with debouncing to prevent spam
+ * @param source - The source that triggered the greeting (for logging)
+ */
 function triggerGreeting(source: string): void {
     const now = Date.now();
     if (now - lastGreetingTime < DEBOUNCE_MS) {
@@ -43,93 +72,110 @@ function triggerGreeting(source: string): void {
     }
 }
 
+/**
+ * Logs all available AI-related commands to a file for debugging
+ * This helps users find the correct commands for their Cursor/VS Code version
+ */
 async function logAvailableCommands(): Promise<void> {
-    const allCommands = await vscode.commands.getCommands(true);
-    const relevantCommands = allCommands.filter(cmd => 
-        cmd.toLowerCase().includes('chat') ||
-        cmd.toLowerCase().includes('composer') ||
-        cmd.toLowerCase().includes('aipopup') ||
-        cmd.toLowerCase().includes('cursor') ||
-        cmd.toLowerCase().includes('copilot') ||
-        cmd.toLowerCase().includes('ask') ||
-        cmd.toLowerCase().includes('ai')
-    );
-    
-    const logPath = path.join(os.homedir(), 'autosay-commands.log');
-    fs.writeFileSync(logPath, relevantCommands.join('\n'));
-    console.log(`AutoSay: Commands written to ${logPath}`);
+    try {
+        const allCommands = await vscode.commands.getCommands(true);
+        const relevantCommands = allCommands.filter(cmd => {
+            const lowerCmd = cmd.toLowerCase();
+            return lowerCmd.includes('chat') ||
+                   lowerCmd.includes('composer') ||
+                   lowerCmd.includes('aipopup') ||
+                   lowerCmd.includes('cursor') ||
+                   lowerCmd.includes('copilot') ||
+                   lowerCmd.includes('ai');
+        });
+        
+        const logPath = path.join(os.homedir(), 'autosay-commands.log');
+        fs.writeFileSync(logPath, relevantCommands.join('\n'), 'utf8');
+        console.log(`AutoSay: Commands written to ${logPath}`);
+    } catch (error) {
+        console.error('AutoSay: Failed to log commands:', error);
+    }
 }
 
-export function activate(context: vscode.ExtensionContext) {
-    console.log('AutoSay extension activated');
+/**
+ * Attempts to open a new AI chat using various Cursor/VS Code commands
+ */
+async function openNewAIChat(): Promise<void> {
+    const chatCommands = [
+        'aichat.newchataction',      // Cursor primary
+        'composer.createNew',         // Cursor composer
+        'composer.newAgentChat',      // Cursor agent
+        'workbench.action.chat.open'  // VS Code Copilot
+    ];
 
+    for (const command of chatCommands) {
+        try {
+            await vscode.commands.executeCommand(command);
+            console.log(`AutoSay: Successfully executed ${command}`);
+            return;
+        } catch (error) {
+            console.log(`AutoSay: ${command} not available`);
+        }
+    }
+    
+    console.log('AutoSay: No chat command succeeded');
+}
+
+/**
+ * Extension activation point
+ * @param context - VS Code extension context
+ */
+export function activate(context: vscode.ExtensionContext): void {
+    console.log('AutoSay: Extension activated');
+
+    // Log available commands for debugging
     logAvailableCommands();
 
-    // Manual greeting command
+    // Command: Manual greeting trigger
     const greetCommand = vscode.commands.registerCommand('autosay.greet', () => {
         const config = getConfig();
         speak(config.message, config.voice, config.rate);
         vscode.window.showInformationMessage('AutoSay: Greeting spoken!');
     });
 
-    // Show detected commands
+    // Command: Show detected commands (for debugging)
     const showCommandsCommand = vscode.commands.registerCommand('autosay.showCommands', async () => {
         const logPath = path.join(os.homedir(), 'autosay-commands.log');
         if (fs.existsSync(logPath)) {
             const doc = await vscode.workspace.openTextDocument(logPath);
             await vscode.window.showTextDocument(doc);
+        } else {
+            vscode.window.showWarningMessage('AutoSay: Commands log not found. Restart the editor.');
         }
     });
 
-    // Cmd+L: Not needed - let Cursor handle it natively
-    const openExistingChat = vscode.commands.registerCommand('autosay.openExistingChat', async () => {
-        console.log('AutoSay: This command should not be triggered - Cmd+L passes through');
-    });
-
-    // Cmd+Shift+L: Open NEW chat (with greeting!)
+    // Command: Open new chat with greeting (Cmd+Shift+L)
     const openNewChat = vscode.commands.registerCommand('autosay.openNewChat', async () => {
         console.log('AutoSay: Opening NEW chat with greeting');
         
         // Speak the greeting
         triggerGreeting('newChat');
         
-        // Wait a moment for greeting to start, then open chat
-        setTimeout(async () => {
-            // Try different Cursor commands
-            console.log('AutoSay: Trying to open new chat...');
-            
-            // Try aichat.newchataction first
-            vscode.commands.executeCommand('aichat.newchataction').then(
-                () => console.log('AutoSay: aichat.newchataction executed'),
-                (e) => console.log('AutoSay: aichat.newchataction error:', e)
-            );
-            
-            // Also try composer.createNew as backup
-            setTimeout(() => {
-                vscode.commands.executeCommand('composer.createNew').then(
-                    () => console.log('AutoSay: composer.createNew executed'),
-                    (e) => console.log('AutoSay: composer.createNew error:', e)
-                );
-            }, 100);
-        }, 50);
+        // Small delay to let greeting start, then open chat
+        await new Promise(resolve => setTimeout(resolve, 100));
+        await openNewAIChat();
     });
 
-    context.subscriptions.push(
-        greetCommand,
-        showCommandsCommand,
-        openExistingChat,
-        openNewChat
-    );
+    // Register all commands
+    context.subscriptions.push(greetCommand, showCommandsCommand, openNewChat);
 
-    // Initial greeting on startup
+    // Startup greeting (with delay to ensure editor is ready)
     const config = getConfig();
     if (config.enabled) {
         setTimeout(() => {
             triggerGreeting('startup');
-        }, 1500);
+        }, 2000);
     }
 }
 
-export function deactivate() {
-    console.log('AutoSay extension deactivated');
+/**
+ * Extension deactivation point
+ */
+export function deactivate(): void {
+    console.log('AutoSay: Extension deactivated');
 }

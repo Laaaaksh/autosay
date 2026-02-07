@@ -43,12 +43,8 @@
         "title": "AutoSay: Show Detected Chat Commands"
       },
       {
-        "command": "autosay.openExistingChat",
-        "title": "AutoSay: Open Existing Chat (Cmd+L)"
-      },
-      {
         "command": "autosay.openNewChat",
-        "title": "AutoSay: Open New Chat with Greeting (Cmd+Shift+L)"
+        "title": "AutoSay: Open New Chat with Greeting"
       }
     ],
     "configuration": {

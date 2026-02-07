@@ -1,0 +1,15 @@
+.vscode/**
+.vscode-test/**
+src/**
+.gitignore
+.yarnrc
+venv/**
+*.vsix
+**/*.ts
+**/*.map
+node_modules/**
+.vscode/**
+*.md
+autosay_server.py
+config.json
+requirements.txt

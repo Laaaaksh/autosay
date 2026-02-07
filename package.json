@@ -1,0 +1,94 @@
+{
+  "name": "autosay",
+  "displayName": "AutoSay Greeting",
+  "description": "Automatically speaks a greeting when you start a new AI chat in Cursor",
+  "version": "1.0.0",
+  "publisher": "laksh-sadhwani",
+  "author": {
+    "name": "Laksh Sadhwani"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/laksh-sadhwani/autosay"
+  },
+  "bugs": {
+    "url": "https://github.com/laksh-sadhwani/autosay/issues"
+  },
+  "homepage": "https://github.com/laksh-sadhwani/autosay#readme",
+  "keywords": [
+    "cursor",
+    "greeting",
+    "tts",
+    "text-to-speech",
+    "ai",
+    "chat"
+  ],
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": ["Other"],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "autosay.greet",
+        "title": "AutoSay: Speak Greeting"
+      },
+      {
+        "command": "autosay.showCommands",
+        "title": "AutoSay: Show Detected Chat Commands"
+      },
+      {
+        "command": "autosay.openExistingChat",
+        "title": "AutoSay: Open Existing Chat (Cmd+L)"
+      },
+      {
+        "command": "autosay.openNewChat",
+        "title": "AutoSay: Open New Chat with Greeting (Cmd+Shift+L)"
+      }
+    ],
+    "configuration": {
+      "title": "AutoSay",
+      "properties": {
+        "autosay.message": {
+          "type": "string",
+          "default": "Hello My Name! Hope you have an amazing session with me. Fresh tab. Same bugs.",
+          "description": "The message to speak"
+        },
+        "autosay.voice": {
+          "type": "string",
+          "default": "Samantha",
+          "enum": ["Samantha", "Victoria", "Karen", "Moira", "Tessa", "Fiona"],
+          "description": "The voice to use (macOS)"
+        },
+        "autosay.rate": {
+          "type": "number",
+          "default": 175,
+          "minimum": 90,
+          "maximum": 720,
+          "description": "Speech rate (words per minute)"
+        },
+        "autosay.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable automatic greeting"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@types/node": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}

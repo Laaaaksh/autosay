@@ -1,8 +1,8 @@
-# AutoSay - Greeting Extension for Cursor & VS Code
+# AutoSay - Greeting Extension for Cursor
 
 > **macOS only** - This extension uses the native `say` command for text-to-speech.
 
-A Cursor/VS Code extension that automatically speaks a personalized greeting when you open a new AI chat session.
+A Cursor extension that automatically speaks a personalized greeting when you open a new AI chat session.
 
 ## Features
 
@@ -10,14 +10,13 @@ A Cursor/VS Code extension that automatically speaks a personalized greeting whe
 - Speaks on editor startup
 - Configurable message, voice, and speech rate
 - Uses macOS native text-to-speech (female voice by default)
-- Works with both **Cursor** and **VS Code**
 
 ## Requirements
 
 | Requirement | Details |
 |-------------|---------|
 | **OS** | macOS only (uses native `say` command) |
-| **Editor** | Cursor IDE or VS Code |
+| **Editor** | Cursor IDE |
 | **Node.js** | Required for building from source |
 
 > **Note for Windows/Linux users:** This extension currently only supports macOS. Contributions to add cross-platform TTS support are welcome!
@@ -46,9 +45,6 @@ npx vsce package --allow-missing-repository
 
 # Install in Cursor
 cursor --install-extension autosay-1.0.0.vsix --force
-
-# OR Install in VS Code
-code --install-extension autosay-1.0.0.vsix --force
 ```
 
 ### Option 2: Development mode
@@ -63,7 +59,7 @@ git clone git@github.com:Laaaaksh/autosay.git
 cd autosay
 npm install
 
-# Open in Cursor/VS Code and press F5 to run in development mode
+# Open in Cursor and press F5 to run in development mode
 ```
 
 ## Setup
@@ -72,12 +68,7 @@ npm install
 
 The extension requires a keybinding to trigger the greeting on new chat.
 
-**Keybindings file location:**
-
-| Editor | Location |
-|--------|----------|
-| **Cursor** | `~/Library/Application Support/Cursor/User/keybindings.json` |
-| **VS Code** | `~/Library/Application Support/Code/User/keybindings.json` |
+**Keybindings file location:** `~/Library/Application Support/Cursor/User/keybindings.json`
 
 **How to update your keybindings:**
 
@@ -167,11 +158,11 @@ This will conflict with AutoSay. You should only have lines that DISABLE (with `
 
 If you find any other commands assigned to `shift+cmd+l` without a `-` prefix, remove those lines.
 
-### Step 2: Restart your editor
+### Step 2: Restart Cursor
 
-After installing and configuring, **completely restart** Cursor/VS Code (`Cmd+Q` and reopen).
+After installing and configuring, **completely restart** Cursor (`Cmd+Q` and reopen).
 
-> **Important:** You must restart Cursor/VS Code **every time** you:
+> **Important:** You must restart Cursor **every time** you:
 > - Install or update the extension
 > - Change any keybindings
 > - Modify extension settings
@@ -270,7 +261,7 @@ Only keep lines that:
 
 Your keybindings file has conflicting bindings.
 
-1. Open your keybindings file (see locations above)
+1. Open your keybindings file: `~/Library/Application Support/Cursor/User/keybindings.json`
 2. Make sure you have ALL the `-` prefixed entries to disable defaults
 3. The file must be valid JSON (check for missing commas)
 
@@ -278,12 +269,9 @@ Your keybindings file has conflicting bindings.
 
 ### Keybindings file location
 
-| Editor | Correct Path |
-|--------|--------------|
-| **Cursor** | `~/Library/Application Support/Cursor/User/keybindings.json` |
-| **VS Code** | `~/Library/Application Support/Code/User/keybindings.json` |
+The correct path is: `~/Library/Application Support/Cursor/User/keybindings.json`
 
-> **Important:** Do NOT use `~/.cursor/` or `~/.vscode/` - those are different directories!
+> **Important:** Do NOT use `~/.cursor/` - that's a different directory!
 
 ### Extension not loading
 
@@ -292,11 +280,7 @@ Your keybindings file has conflicting bindings.
 3. Search for "AutoSay Greeting"
 4. If not found, reinstall:
    ```bash
-   # Cursor
    cursor --install-extension autosay-1.0.0.vsix --force
-   
-   # VS Code
-   code --install-extension autosay-1.0.0.vsix --force
    ```
 
 ### No sound
@@ -343,18 +327,12 @@ If you hear a male voice instead of Samantha:
    - Click **System Voice** dropdown → **Manage Voices**
    - Download "Samantha" or other preferred voices
 
-### VS Code: No AI chat available
-
-This extension is primarily designed for Cursor's AI chat feature. In vanilla VS Code:
-- You need GitHub Copilot Chat or similar extension for the new chat functionality
-- The greeting will still speak on startup and when manually triggered
-
 ## How It Works
 
 1. On startup, the extension speaks the greeting (if enabled)
 2. When you press `Cmd+Shift+L`:
    - The greeting is spoken using macOS `say` command
-   - The extension tries to open a new AI chat using Cursor/VS Code commands
+   - The extension opens a new AI chat using Cursor commands
 3. A debounce mechanism prevents multiple greetings within 5 seconds
 
 ## Development
@@ -405,4 +383,3 @@ Ideas for contributions:
 - Cross-platform TTS support (Windows/Linux)
 - More voice options
 - Custom audio file support
-- Integration with other AI chat extensions

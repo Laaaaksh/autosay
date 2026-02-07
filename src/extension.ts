@@ -21,7 +21,7 @@ interface AutoSayConfig {
 }
 
 /**
- * Retrieves the AutoSay configuration from VS Code settings
+ * Retrieves the AutoSay configuration from Cursor settings
  * @returns AutoSayConfig object with all settings
  */
 function getConfig(): AutoSayConfig {
@@ -74,7 +74,7 @@ function triggerGreeting(source: string): void {
 
 /**
  * Logs all available AI-related commands to a file for debugging
- * This helps users find the correct commands for their Cursor/VS Code version
+ * This helps users find the correct commands for their Cursor version
  */
 async function logAvailableCommands(): Promise<void> {
     try {
@@ -98,7 +98,7 @@ async function logAvailableCommands(): Promise<void> {
 }
 
 /**
- * Attempts to open a new AI chat using various Cursor/VS Code commands
+ * Attempts to open a new AI chat using Cursor commands
  */
 async function openNewAIChat(): Promise<void> {
     // First, ensure the composer/chat panel is open
@@ -134,7 +134,7 @@ async function openNewAIChat(): Promise<void> {
 
 /**
  * Extension activation point
- * @param context - VS Code extension context
+ * @param context - Extension context
  */
 export function activate(context: vscode.ExtensionContext): void {
     console.log('AutoSay: Extension activated');

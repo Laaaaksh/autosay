@@ -12,4 +12,4 @@ All notable changes to the AutoSay extension will be documented in this file.
 - Greeting on editor startup
 - Greeting on new AI chat (`Cmd+Shift+L`)
 - Debug command to show available chat commands
-- Support for Cursor and VS Code
+- Support for Cursor IDE

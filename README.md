@@ -190,11 +190,44 @@ Open Command Palette (`Cmd+Shift+P`) and type "AutoSay":
 
 ### Greeting speaks but new chat doesn't open
 
-The chat commands vary between Cursor versions. 
+This is a known issue where Cursor's internal chat commands sometimes don't respond to programmatic calls.
 
+**Step 1: Check the Developer Console**
 1. Open Developer Console: `Help → Toggle Developer Tools → Console`
-2. Press `Cmd+Shift+L` and look for "AutoSay:" messages
-3. Run `AutoSay: Show Detected Chat Commands` to see available commands
+2. Press `Cmd+Shift+L` and look for messages starting with "AutoSay:"
+3. You should see something like:
+   ```
+   AutoSay: Opening NEW chat with greeting
+   AutoSay: Speaking greeting (triggered by newChat)
+   AutoSay: Successfully executed aichat.newchataction
+   ```
+
+**Step 2: Verify keybindings are correct**
+
+Make sure you've disabled the original Cursor keybinding. Your `keybindings.json` should include:
+```json
+{
+    "key": "shift+cmd+l",
+    "command": "-aichat.newchataction"
+}
+```
+
+**Step 3: Try alternative chat commands**
+
+Run `AutoSay: Show Detected Chat Commands` and check which commands are available. The extension tries these in order:
+- `aichat.newchataction` (Cursor primary)
+- `composer.createNew` (Cursor composer)
+- `composer.newAgentChat` (Cursor agent)
+- `workbench.action.chat.open` (VS Code Copilot)
+
+**Step 4: Manual workaround**
+
+If programmatic opening doesn't work, you can use the extension just for the greeting and open new chat manually:
+1. Press `Cmd+Shift+L` to hear the greeting
+2. Press `Cmd+L` then click "New Chat" to open a fresh chat
+
+**Why this happens:**
+Cursor's internal commands may require specific UI state or context that isn't available when called programmatically. This varies between Cursor versions.
 
 ### Keybinding doesn't work / Opens "Go to Line"
 

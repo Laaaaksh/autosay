@@ -10,12 +10,12 @@
   "license": "GPL-3.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Laaaaksh/autosay"
+    "url": "https://github.com/attentionfs/autosay"
   },
   "bugs": {
-    "url": "https://github.com/Laaaaksh/autosay/issues"
+    "url": "https://github.com/attentionfs/autosay/issues"
   },
-  "homepage": "https://github.com/Laaaaksh/autosay#readme",
+  "homepage": "https://github.com/attentionfs/autosay#readme",
   "keywords": [
     "cursor",
     "greeting",

@@ -27,10 +27,10 @@ A Cursor extension that automatically speaks a personalized greeting when you op
 
 ```bash
 # Clone the repository (HTTPS)
-git clone https://github.com/Laaaaksh/autosay.git
+git clone https://github.com/attentionfs/autosay.git
 
 # OR clone via SSH
-git clone git@github.com:Laaaaksh/autosay.git
+git clone git@github.com:attentionfs/autosay.git
 
 cd autosay
 
@@ -51,10 +51,10 @@ cursor --install-extension autosay-1.0.0.vsix --force
 
 ```bash
 # Clone and install (HTTPS)
-git clone https://github.com/Laaaaksh/autosay.git
+git clone https://github.com/attentionfs/autosay.git
 
 # OR clone via SSH
-git clone git@github.com:Laaaaksh/autosay.git
+git clone git@github.com:attentionfs/autosay.git
 
 cd autosay
 npm install
